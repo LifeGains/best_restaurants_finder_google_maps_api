@@ -51,7 +51,8 @@ def find_best_restaurants(city_name, place_type, min_rating=0, min_n_ratings=0, 
         df = df._append(results[j], ignore_index=True)
     try:
       next_page_token_list[counter] = parent_results.get('next_page_token')
-      print(next_page_token_list)
+      # Comment out for streamlit
+    #   print(next_page_token_list)
       counter += 1
       time.sleep(3)
     except:
@@ -62,7 +63,8 @@ def find_best_restaurants(city_name, place_type, min_rating=0, min_n_ratings=0, 
   # Do not repeat the col names
   df = df[['name', 'rating', 'user_ratings_total'] + [col for col in df.columns if col not in ['name', 'rating', 'user_ratings_total']]]
 #   df = df[ ['name', 'rating', 'user_ratings_total'] + [ col for col in df.columns if col != ['name', 'rating', 'user_ratings_total'] ] ]
-  print(str(len(df)) + " results")
+    # Comment out for streamlit
+#   print(str(len(df)) + " results")
     #   return df
   return df
 
