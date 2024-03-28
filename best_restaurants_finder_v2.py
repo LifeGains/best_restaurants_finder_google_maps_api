@@ -8,9 +8,8 @@ import sys
 from dotenv import load_dotenv, find_dotenv
 import streamlit as st
 
-
-pd.set_option('display.float_format', lambda x: '%.2f' % x)
-pd.set_option('display.max_columns', None)
+# pd.set_option('display.float_format', lambda x: '%.2f' % x)
+# pd.set_option('display.max_columns', None)
 
 # Path
 dotenv_path = 'C:\\Users\\kevin\\Google Drive\\My Drive\\Github\\all-api-keys\\.env'
@@ -20,9 +19,9 @@ load_dotenv(dotenv_path)
 gmaps_api_key = os.getenv("GOOGLE_MAPS_API_KEY")
 gmaps = googlemaps.Client(gmaps_api_key)
 
-import warnings
+# import warnings
 # Set ignore_warnings to True
-warnings.simplefilter("ignore")
+# warnings.simplefilter("ignore")
 
 def find_best_restaurants(city_name, place_type, min_rating=0, min_n_ratings=0, query='', n_meters=1000):
   lat = gmaps.places(query=city_name).get('results')[0].get('geometry').get('location').get('lat')
@@ -107,9 +106,6 @@ def app():
     if not city_name or not place_type:
         st.info("Please enter a valid city or select a valid place type.")
 
-
-
-    
 # Only run this if its ran as a standalone program.
 if __name__ == '__main__':
     app()
