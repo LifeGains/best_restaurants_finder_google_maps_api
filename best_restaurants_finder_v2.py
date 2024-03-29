@@ -58,9 +58,15 @@ def find_best_restaurants(city_name, place_type, min_rating=0, min_n_ratings=0, 
       time.sleep(0)
 
   df = df.join(pd.json_normalize(df['geometry'])).drop('geometry',axis=1)
-  df = df.sort_values(by=['rating', 'user_ratings_total'], ascending=[False, False])
+  # Todo: Figure out the best way to create a score column
+  # Create permalink with long/lat/place_id
+
+  df['permalink'] = df.apply(lambda row: f"https://www.google.com/maps/search/?api=1&query={row['location.lng']}%2C{row['location.lat']}&query_place_id={row['place_id']}"
+                             , axis=1)
+  # Sort by rating and user rating, reset index.
+  df = df.sort_values(by=['rating', 'user_ratings_total'], ascending=[False, False]).reset_index()
   # Do not repeat the col names
-  df = df[['name', 'rating', 'user_ratings_total'] + [col for col in df.columns if col not in ['name', 'rating', 'user_ratings_total']]]
+  df = df[['name', 'rating', 'user_ratings_total', 'permalink'] + [col for col in df.columns if col not in ['name', 'rating', 'user_ratings_total', 'permalink']]]
 #   df = df[ ['name', 'rating', 'user_ratings_total'] + [ col for col in df.columns if col != ['name', 'rating', 'user_ratings_total'] ] ]
     # Comment out for streamlit
 #   print(str(len(df)) + " results")
