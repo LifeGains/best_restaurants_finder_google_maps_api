@@ -92,11 +92,25 @@ def app():
         options = ["restaurant", "bar", "park", "cafe", "bakery", "night_club"]
                    # art_gallery", "museum", "beauty_salon"]
         place_type = st.selectbox("Choose a place type", options)
-        min_rating = st.number_input('Insert desired minimum rating between 0 and 5 (eg. 4.3)'
-                                     ,placeholder="4.3"
+        # min_rating = st.number_input('Insert desired minimum rating between 0 and 5 (eg. 4.3)'
+        #                              ,placeholder="4.3"
+        #                              )
+        # Create a list of numbers from 0 to 4 with a step of 0.5
+        numbers_5_to_4 = np.round(np.arange(4.9, 3.6, -0.1), 1)
+        numbers_4_to_0 = np.round(np.arange(3.5, -0.1, -0.5), 1)
+        combined_numbers = sorted(np.unique(np.concatenate((numbers_5_to_4, numbers_4_to_0))), reverse=True)
+        min_rating = st.selectbox('Insert desired minimum rating between 0 and 5 (eg. 4.3)'
+                                     ,combined_numbers
                                      )
-        min_num_reviews = st.number_input('Insert desired minimum number of reviews (eg. 100)'
-                                    ,placeholder="500")
+        # Repeat for n_reviews
+        numbers_0_to_200 = np.arange(0, 201, 50)
+        numbers_200_to_1000 = np.arange(200, 1001, 100)
+        combined_reviews_numbers = np.unique(np.concatenate((numbers_0_to_200, numbers_200_to_1000)))
+        
+        min_num_reviews = st.selectbox('Insert desired minimum number of reviews (eg. 100)'
+                                    ,combined_reviews_numbers)
+        # min_num_reviews = st.number_input('Insert desired minimum number of reviews (eg. 100)'
+        #                             ,placeholder="500")
 
         cuisine_type = st.text_input(
             "[Optional] Enter the type of cuisine you're looking for (Eg. japanese, italian, asian, german)"
