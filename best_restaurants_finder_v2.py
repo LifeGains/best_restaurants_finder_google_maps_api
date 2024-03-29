@@ -64,14 +64,18 @@ def find_best_restaurants(city_name, place_type, min_rating=0, min_n_ratings=0, 
   df['permalink'] = df.apply(lambda row: f"https://www.google.com/maps/search/?api=1&query={row['location.lng']}%2C{row['location.lat']}&query_place_id={row['place_id']}"
                              , axis=1)
   # Sort by rating and user rating, reset index.
-  df = df.sort_values(by=['rating', 'user_ratings_total'], ascending=[False, False]).reset_index()
+  df = df.sort_values(by=['rating', 'user_ratings_total'], ascending=[False, False])
   # Do not repeat the col names
   df = df[['name', 'rating', 'user_ratings_total', 'permalink'] + [col for col in df.columns if col not in ['name', 'rating', 'user_ratings_total', 'permalink']]]
 #   df = df[ ['name', 'rating', 'user_ratings_total'] + [ col for col in df.columns if col != ['name', 'rating', 'user_ratings_total'] ] ]
     # Comment out for streamlit
 #   print(str(len(df)) + " results")
     #   return df
-  return df
+  # Final drop duplicates check, based on place_id.
+  df = df.drop_duplicates(subset='place_id', keep='first')
+  # Final reset index
+  df = df.reset_index(drop=True)
+  return df  
 
 # From streamlit
 def app():
@@ -85,7 +89,7 @@ def app():
             ,type="default"
             ,placeholder="Enter a city"
         )
-        options = ["restaurant", "bar", "cafe", "bakery", "night_club"]
+        options = ["restaurant", "bar", "park", "cafe", "bakery", "night_club"]
                    # art_gallery", "museum", "beauty_salon"]
         place_type = st.selectbox("Choose a place type", options)
         min_rating = st.number_input('Insert desired minimum rating between 0 and 5 (eg. 4.3)'
@@ -94,6 +98,12 @@ def app():
         min_num_reviews = st.number_input('Insert desired minimum number of reviews (eg. 100)'
                                     ,placeholder="500")
 
+        cuisine_type = st.text_input(
+            "[Optional] Enter the type of cuisine you're looking for (Eg. japanese, italian, asian, german)"
+            ,max_chars=100
+            ,type="default"
+            ,placeholder="Eg. japanese, italian, asian, german"
+        )
         if st.form_submit_button("Submit"):
             with st.spinner('Generating top restaurants...'):
                 # Put the sub-city into the city_name for it to work better. Eg. Lower East Side instead of Manhattan.
@@ -103,11 +113,14 @@ def app():
                       min_rating=min_rating,
                       min_n_ratings=min_num_reviews,
                       # can be park, asian, bar, etc.
-                      # query='asian',
+                      query=cuisine_type,
                       # radius is in meters, so 4828.02 = 3 miles.
                       n_meters=1000,
                       )
-                return st.dataframe(df)
+                return st.dataframe(df,
+                                    column_config={
+                                      "permalink": st.column_config.LinkColumn()
+    })
         
     if not city_name or not place_type:
         st.info("Please enter a valid city or select a valid place type.")
