@@ -51,49 +51,48 @@ def find_best_restaurants(city_name, place_type, min_rating=0, min_n_ratings=0, 
         # df = df.concat(results[j], ignore_index=True)
         df = df._append(results[j], ignore_index=True)
     try:
-      next_page_token_list[counter] = parent_results.get('next_page_token')
-      # Comment out for streamlit
-    #   print(next_page_token_list)
-      counter += 1
-      time.sleep(3)
-    except:
-      time.sleep(0)
+      if counter < len(next_page_token_list):
+        next_page_token_list[counter] = parent_results.get('next_page_token')
+        # Comment out for streamlit
+        # print(next_page_token_list)
+        counter += 1
+        time.sleep(3)
+      else:
+         break
+    except KeyError:
+      break
 
   # Expands this into try/except:
   # df = df.join(pd.json_normalize(df['geometry'])).drop('geometry',axis=1)
 
-  try:
+  # Kill the whole thing if no results found.
+  if df.empty:
+        raise ValueError("You have high af standards. Unfortunately, there are no results matching the criteria. Please lower minimum number of reviews or minimum rating.")
+  else:
       # Attempt to normalize and join the 'geometry' column
       expanded_geometry = pd.json_normalize(df['geometry'])
-      if not expanded_geometry.empty:
-          df = df.join(expanded_geometry).drop('geometry', axis=1)
+      df = df.join(expanded_geometry).drop('geometry', axis=1)
 
-          # Todo: Figure out the best way to create a score column
-          # Create permalink with long/lat/place_id
+      # Todo: Figure out the best way to create a score column
+      # Create permalink with long/lat/place_id
 
-          df['permalink'] = df.apply(lambda row: f"https://www.google.com/maps/search/?api=1&query={row['location.lng']}%2C{row['location.lat']}&query_place_id={row['place_id']}"
-                                    , axis=1)
-          # Sort by rating and user rating, reset index.
-          df = df.sort_values(by=['rating', 'user_ratings_total'], ascending=[False, False])
-          # Set column order
-          col_order = ['name', 'rating', 'user_ratings_total', 'permalink', 'price_level']
-          # Do not repeat the col names
-          df = df[col_order + [col for col in df.columns if col not in col_order]]
-          #   df = df[ ['name', 'rating', 'user_ratings_total'] + [ col for col in df.columns if col != ['name', 'rating', 'user_ratings_total'] ] ]
-            # Comment out for streamlit
-          #   print(str(len(df)) + " results")
-            #   return df
-          # Final drop duplicates check, based on place_id.
-          df = df.drop_duplicates(subset='place_id', keep='first')
-          # Final reset index
-          df = df.reset_index(drop=True)
-          return df  
-      else:
-          # If the resulting DataFrame from normalization is empty, raise an exception
-          raise ValueError('No results with this search criteria. Please revise conditions.')
-  except Exception as e:
-      # This catches any exception, including ValueError raised above and others that might occur during normalization or joining
-      print('Error:', e)
+      df['permalink'] = df.apply(lambda row: f"https://www.google.com/maps/search/?api=1&query={row['location.lng']}%2C{row['location.lat']}&query_place_id={row['place_id']}"
+                                , axis=1)
+      # Sort by rating and user rating, reset index.
+      df = df.sort_values(by=['rating', 'user_ratings_total'], ascending=[False, False])
+      # Set column order
+      col_order = ['name', 'rating', 'user_ratings_total', 'permalink', 'price_level']
+      # Do not repeat the col names
+      df = df[col_order + [col for col in df.columns if col not in col_order]]
+      #   df = df[ ['name', 'rating', 'user_ratings_total'] + [ col for col in df.columns if col != ['name', 'rating', 'user_ratings_total'] ] ]
+        # Comment out for streamlit
+      #   print(str(len(df)) + " results")
+        #   return df
+      # Final drop duplicates check, based on place_id.
+      df = df.drop_duplicates(subset='place_id', keep='first')
+      # Final reset index
+      df = df.reset_index(drop=True)
+      return df
 
 
 # From streamlit
@@ -188,7 +187,7 @@ def app():
             except ValueError as e:
                 # Catch the custom exception and inform the user
                 st.error(str(e))
-                st.info("There are no results or given your input criteria. Please adjust it and try again.")
+                st.info("There are no results given your input criteria. Please adjust it and try again.")
       
 
 # Only run this if its ran as a standalone program.
