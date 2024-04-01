@@ -105,6 +105,7 @@ def app():
         combined_numbers = sorted(np.unique(np.concatenate((numbers_5_to_4, numbers_4_to_0))), reverse=True)
         min_rating = st.selectbox('Desired Minimum Rating?'
                                      ,combined_numbers
+                                     ,index = 6 # Default is 4.3 stars.
                                      )
         # Repeat for n_reviews
         numbers_0_to_200 = np.arange(0, 201, 50)
@@ -112,7 +113,9 @@ def app():
         combined_reviews_numbers = np.unique(np.concatenate((numbers_0_to_200, numbers_200_to_1000)))
         
         min_num_reviews = st.selectbox('Desired Minimum Amount of Reviews?'
-                                    ,combined_reviews_numbers)
+                                    ,combined_reviews_numbers
+                                    # Default is 100
+                                    ,index = 2)
         # min_num_reviews = st.number_input('Insert desired minimum number of reviews (eg. 100)'
         #                             ,placeholder="500")
 
@@ -123,10 +126,16 @@ def app():
             ,placeholder="Eg. asian, noodles, sushi, japanese, italian, german"
         )
 
-        price_level_options = ["No data", "$", "$$", "$$$", "$$$$"]
+        price_level_options = {
+            "No data": None,
+            "$": 1,
+            "$$": 2,
+            "$$$": 3,
+            "$$$$": 4
+        }
         price_level_type = st.multiselect("[Optional] Price levels to include: ", 
-                                          options=price_level_options,
-                                          default=price_level_options)
+                                          options=list(price_level_options.keys()),
+                                          default=list(price_level_options.keys()))
 
         if st.form_submit_button("Submit"):
             with st.spinner('Generating top restaurants...'):
@@ -141,7 +150,15 @@ def app():
                       # radius is in meters, so 4828.02 = 3 miles.
                       n_meters=1000,
                       )
-                return st.dataframe(df,
+                
+                # Filter rows only if df['price_level'] in price_level_type
+                # Step 1: Translate selected keys to their corresponding values
+                selected_values = [price_level_options[key] for key in price_level_type]
+
+                # Step 2: Filter DataFrame rows
+                filtered_df = df[df['price_level'].isin(selected_values)]
+
+                return st.dataframe(filtered_df,
                                     column_config={
                                       "permalink": st.column_config.LinkColumn()
     })
