@@ -124,7 +124,7 @@ def app():
         )
 
         price_level_options = ["No data", "$", "$$", "$$$", "$$$$"]
-        price_level_type = st.multiselect("Price levels to include: ", 
+        price_level_type = st.multiselect("[Optional] Price levels to include: ", 
                                           options=price_level_options,
                                           default=price_level_options)
 
