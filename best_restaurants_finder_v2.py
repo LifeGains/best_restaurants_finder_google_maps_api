@@ -7,6 +7,8 @@ import time
 import sys
 from dotenv import load_dotenv, find_dotenv
 import streamlit as st
+from datetime import datetime
+import numpy as np
 
 # pd.set_option('display.float_format', lambda x: '%.2f' % x)
 # pd.set_option('display.max_columns', None)
@@ -65,8 +67,10 @@ def find_best_restaurants(city_name, place_type, min_rating=0, min_n_ratings=0, 
                              , axis=1)
   # Sort by rating and user rating, reset index.
   df = df.sort_values(by=['rating', 'user_ratings_total'], ascending=[False, False])
+  # Set column order
+  col_order = ['name', 'rating', 'user_ratings_total', 'permalink', 'price_level']
   # Do not repeat the col names
-  df = df[['name', 'rating', 'user_ratings_total', 'permalink'] + [col for col in df.columns if col not in ['name', 'rating', 'user_ratings_total', 'permalink']]]
+  df = df[col_order + [col for col in df.columns if col not in col_order]]
 #   df = df[ ['name', 'rating', 'user_ratings_total'] + [ col for col in df.columns if col != ['name', 'rating', 'user_ratings_total'] ] ]
     # Comment out for streamlit
 #   print(str(len(df)) + " results")
@@ -118,6 +122,12 @@ def app():
             ,type="default"
             ,placeholder="Eg. japanese, italian, asian, german"
         )
+
+        price_level_options = ["No data", "$", "$$", "$$$", "$$$$"]
+        price_level_type = st.multiselect("Price levels to include: ", 
+                                          options=price_level_options,
+                                          default=price_level_options)
+
         if st.form_submit_button("Submit"):
             with st.spinner('Generating top restaurants...'):
                 # Put the sub-city into the city_name for it to work better. Eg. Lower East Side instead of Manhattan.
