@@ -59,27 +59,42 @@ def find_best_restaurants(city_name, place_type, min_rating=0, min_n_ratings=0, 
     except:
       time.sleep(0)
 
-  df = df.join(pd.json_normalize(df['geometry'])).drop('geometry',axis=1)
-  # Todo: Figure out the best way to create a score column
-  # Create permalink with long/lat/place_id
+  # Expands this into try/except:
+  # df = df.join(pd.json_normalize(df['geometry'])).drop('geometry',axis=1)
 
-  df['permalink'] = df.apply(lambda row: f"https://www.google.com/maps/search/?api=1&query={row['location.lng']}%2C{row['location.lat']}&query_place_id={row['place_id']}"
-                             , axis=1)
-  # Sort by rating and user rating, reset index.
-  df = df.sort_values(by=['rating', 'user_ratings_total'], ascending=[False, False])
-  # Set column order
-  col_order = ['name', 'rating', 'user_ratings_total', 'permalink', 'price_level']
-  # Do not repeat the col names
-  df = df[col_order + [col for col in df.columns if col not in col_order]]
-#   df = df[ ['name', 'rating', 'user_ratings_total'] + [ col for col in df.columns if col != ['name', 'rating', 'user_ratings_total'] ] ]
-    # Comment out for streamlit
-#   print(str(len(df)) + " results")
-    #   return df
-  # Final drop duplicates check, based on place_id.
-  df = df.drop_duplicates(subset='place_id', keep='first')
-  # Final reset index
-  df = df.reset_index(drop=True)
-  return df  
+  try:
+      # Attempt to normalize and join the 'geometry' column
+      expanded_geometry = pd.json_normalize(df['geometry'])
+      if not expanded_geometry.empty:
+          df = df.join(expanded_geometry).drop('geometry', axis=1)
+
+          # Todo: Figure out the best way to create a score column
+          # Create permalink with long/lat/place_id
+
+          df['permalink'] = df.apply(lambda row: f"https://www.google.com/maps/search/?api=1&query={row['location.lng']}%2C{row['location.lat']}&query_place_id={row['place_id']}"
+                                    , axis=1)
+          # Sort by rating and user rating, reset index.
+          df = df.sort_values(by=['rating', 'user_ratings_total'], ascending=[False, False])
+          # Set column order
+          col_order = ['name', 'rating', 'user_ratings_total', 'permalink', 'price_level']
+          # Do not repeat the col names
+          df = df[col_order + [col for col in df.columns if col not in col_order]]
+          #   df = df[ ['name', 'rating', 'user_ratings_total'] + [ col for col in df.columns if col != ['name', 'rating', 'user_ratings_total'] ] ]
+            # Comment out for streamlit
+          #   print(str(len(df)) + " results")
+            #   return df
+          # Final drop duplicates check, based on place_id.
+          df = df.drop_duplicates(subset='place_id', keep='first')
+          # Final reset index
+          df = df.reset_index(drop=True)
+          return df  
+      else:
+          # If the resulting DataFrame from normalization is empty, raise an exception
+          raise ValueError('No results with this search criteria. Please revise conditions.')
+  except Exception as e:
+      # This catches any exception, including ValueError raised above and others that might occur during normalization or joining
+      print('Error:', e)
+
 
 # From streamlit
 def app():
@@ -93,8 +108,8 @@ def app():
             ,type="default"
             ,placeholder="Enter a city"
         )
-        options = ["restaurant", "bar", "park", "cafe", "bakery", "night_club"]
-                   # art_gallery", "museum", "beauty_salon"]
+        options = ["restaurant", "cafe", "bar", "park", "bakery"]
+                   # "night_club", "art_gallery", "museum", "beauty_salon"]
         place_type = st.selectbox("Place type: ", options)
         # min_rating = st.number_input('Insert desired minimum rating between 0 and 5 (eg. 4.3)'
         #                              ,placeholder="4.3"
@@ -123,7 +138,7 @@ def app():
             "[Optional] Enter type of cuisine you're looking for: "
             ,max_chars=100
             ,type="default"
-            ,placeholder="Eg. asian, noodles, sushi, japanese, italian, german"
+            ,placeholder="Eg. asian, boba, noodles, sushi, japanese, italian, german"
         )
 
         price_level_options = {
@@ -138,33 +153,43 @@ def app():
                                           default=list(price_level_options.keys()))
 
         if st.form_submit_button("Submit"):
-            with st.spinner('Generating top restaurants...'):
-                # Put the sub-city into the city_name for it to work better. Eg. Lower East Side instead of Manhattan.
-                df = find_best_restaurants(city_name=city_name,
-                      # place_type is more set in stone, has to be allowed param in google
-                      place_type=place_type,
-                      min_rating=min_rating,
-                      min_n_ratings=min_num_reviews,
-                      # can be park, asian, bar, etc.
-                      query=cuisine_type,
-                      # radius is in meters, so 4828.02 = 3 miles.
-                      n_meters=1000,
-                      )
-                
-                # Filter rows only if df['price_level'] in price_level_type
-                # Step 1: Translate selected keys to their corresponding values
-                selected_values = [price_level_options[key] for key in price_level_type]
+            try:
+              with st.spinner(f'Generating top ' + next(iter({place_type})) + 's...'):
+              # if cuisine_type is not blank:
+              # with st.spinner(f'Generating top ' + next(iter({place_type})) + 's (with a ' + next(iter({cuisine_type})) + ' focus)...'):
+                  # Put the sub-city into the city_name for it to work better. Eg. Lower East Side instead of Manhattan.
+                  df = find_best_restaurants(city_name=city_name,
+                        # place_type is more set in stone, has to be allowed param in google
+                        place_type=place_type,
+                        min_rating=min_rating,
+                        min_n_ratings=min_num_reviews,
+                        # can be park, asian, bar, etc.
+                        query=cuisine_type,
+                        # radius is in meters, so 4828.02 = 3 miles.
+                        n_meters=1000,
+                        )
+                  
+                  # Filter rows only if df['price_level'] in price_level_type
+                  # Step 1: Translate selected keys to their corresponding values
+                  selected_values = [price_level_options[key] for key in price_level_type]
 
-                # Step 2: Filter DataFrame rows
-                filtered_df = df[df['price_level'].isin(selected_values)]
+                  # Step 2: Filter DataFrame rows
+                  filtered_df = df[df['price_level'].isin(selected_values)]
 
-                return st.dataframe(filtered_df,
-                                    column_config={
-                                      "permalink": st.column_config.LinkColumn()
-    })
-        
-    if not city_name or not place_type:
-        st.info("Please enter a valid city or select a valid place type.")
+                  # Exception handling: if there are no restaurants > 1000 reviews, return this.
+                  if filtered_df.empty:
+                        # If the dataframe is empty, raise a custom exception
+                        raise ValueError("No restaurants found that match the criteria.")
+                    
+                  return st.dataframe(filtered_df,
+                                      column_config={
+                                        "permalink": st.column_config.LinkColumn()
+                  })
+            except ValueError as e:
+                # Catch the custom exception and inform the user
+                st.error(str(e))
+                st.info("There are no results or given your input criteria. Please adjust it and try again.")
+      
 
 # Only run this if its ran as a standalone program.
 if __name__ == '__main__':
