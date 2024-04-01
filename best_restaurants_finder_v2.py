@@ -88,14 +88,14 @@ def app():
                This app lets you filter for the highest rated restaurants only if they have a minimum number of reviews.")
     with st.form(key='my_form'):
         city_name = st.text_input(
-            "Enter the city from which you want to find a restaurant"
+            "Which city are you looking for a restaurant in:"
             ,max_chars=100
             ,type="default"
             ,placeholder="Enter a city"
         )
         options = ["restaurant", "bar", "park", "cafe", "bakery", "night_club"]
                    # art_gallery", "museum", "beauty_salon"]
-        place_type = st.selectbox("Choose a place type", options)
+        place_type = st.selectbox("Place type: ", options)
         # min_rating = st.number_input('Insert desired minimum rating between 0 and 5 (eg. 4.3)'
         #                              ,placeholder="4.3"
         #                              )
@@ -103,7 +103,7 @@ def app():
         numbers_5_to_4 = np.round(np.arange(4.9, 3.6, -0.1), 1)
         numbers_4_to_0 = np.round(np.arange(3.5, -0.1, -0.5), 1)
         combined_numbers = sorted(np.unique(np.concatenate((numbers_5_to_4, numbers_4_to_0))), reverse=True)
-        min_rating = st.selectbox('Insert desired minimum rating between 0 and 5 (eg. 4.3)'
+        min_rating = st.selectbox('Desired Minimum Rating?'
                                      ,combined_numbers
                                      )
         # Repeat for n_reviews
@@ -111,16 +111,16 @@ def app():
         numbers_200_to_1000 = np.arange(200, 1001, 100)
         combined_reviews_numbers = np.unique(np.concatenate((numbers_0_to_200, numbers_200_to_1000)))
         
-        min_num_reviews = st.selectbox('Insert desired minimum number of reviews (eg. 100)'
+        min_num_reviews = st.selectbox('Desired Minimum Amount of Reviews?'
                                     ,combined_reviews_numbers)
         # min_num_reviews = st.number_input('Insert desired minimum number of reviews (eg. 100)'
         #                             ,placeholder="500")
 
         cuisine_type = st.text_input(
-            "[Optional] Enter the type of cuisine you're looking for (Eg. japanese, italian, asian, german)"
+            "[Optional] Enter type of cuisine you're looking for: "
             ,max_chars=100
             ,type="default"
-            ,placeholder="Eg. japanese, italian, asian, german"
+            ,placeholder="Eg. asian, noodles, sushi, japanese, italian, german"
         )
 
         price_level_options = ["No data", "$", "$$", "$$$", "$$$$"]
