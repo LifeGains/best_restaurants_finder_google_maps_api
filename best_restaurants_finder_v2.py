@@ -127,7 +127,7 @@ def app():
         )
 
         price_level_options = {
-            "No data": None,
+            "No label": None,
             "$": 1,
             "$$": 2,
             "$$$": 3,
