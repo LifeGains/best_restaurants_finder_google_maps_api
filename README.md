@@ -19,11 +19,17 @@
 
 # Jira To Do Nexts / Blockers
 
+- Create master "score" that is some weighted combination of `n_rating` * `n_reviews`. Find some way to translate 4.1, 4.5, 4.7 into S, A, B, C, D, F tier.
+    - Based on market research, seems like theres an exponential decay for n reviews.
+    - For example, 1000 reviews = 3000 reviews. However, 500 reviews > 100 reviews.
+- Remove extraneous columns
 - Make the name column be hyperlinked with the permalink.
     - https://docs.streamlit.io/library/api-reference/data/st.column_config/st.column_config.linkcolumn
     - https://github.com/streamlit/streamlit/issues/6787
-- Create master "score" that is some weighted combination of `n_rating` * `n_reviews`. Find some way to translate 4.1, 4.5, 4.7 into S, A, B, C, D, F tier.
 - Drop down autofiller multiselect for city
+- Add Is Open Now filter
+- Add Is Operational filter (not perma or temporarily closed)
+- Figure out how to extract/display the photos in the photos column?
 - More exact error handling - what in the filter criteria caused the API to not be able to retrieve any data?
 - Option to expand/reduce radius within City.
 - Option to specify state so that the city is not confused with another state (eg. Paris, France vs. Paris, Texas) 

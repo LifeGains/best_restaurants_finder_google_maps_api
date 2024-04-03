@@ -183,8 +183,9 @@ def app():
                   return st.dataframe(filtered_df,
                                       column_config={
                                          "permalink": st.column_config.LinkColumn(
-                                            "Permalink", 
-                                            display_text=filtered_df['name']
+                                            "Gmaps Link", 
+                                            help="Direct link to Google Maps",
+                                            display_text="GMaps Link"
                                          )
                                         # "permalink": st.column_config.LinkColumn()
                   })
