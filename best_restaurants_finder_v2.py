@@ -201,7 +201,10 @@ def app():
                   if filtered_df.empty:
                         # If the dataframe is empty, raise a custom exception
                         raise ValueError("No restaurants found that match the criteria.")
-                    
+                  
+                  # Reset index before returning results
+                  filtered_df = filtered_df.reset_index()
+
                   return st.dataframe(filtered_df,
                                       column_config={
                                          "permalink": st.column_config.LinkColumn(
