@@ -13,6 +13,7 @@
 
 # Jira To Do Nexts / Blockers
 
+- Create master "score" that is some weighted combination of `n_rating` * `n_reviews`. Find some way to translate 4.1, 4.5, 4.7 into S, A, B, C, D, F tier.
 - Drop down autofiller multiselect for city
 - More exact error handling - what in the filter criteria caused the API to not be able to retrieve any data?
 - Option to expand/reduce radius within City.
