@@ -25,11 +25,13 @@
 - Remove extraneous columns
 - Make the name column be hyperlinked with the permalink.
     - https://docs.streamlit.io/library/api-reference/data/st.column_config/st.column_config.linkcolumn
-    - https://github.com/streamlit/streamlit/issues/6787
+    - Blocked: https://github.com/streamlit/streamlit/issues/6787
 - Drop down autofiller multiselect for city
 - Add Is Open Now filter
 - Add Is Operational filter (not perma or temporarily closed)
 - **Plot the top 10 results on a Gmaps Embed**
+- Rearrange dataframe column order depending on if its a mobile device (bring Gmaps link to the 3rd col) or not
+    - Blocked: https://github.com/streamlit/streamlit/issues/708
 - Figure out how to extract/display the photos in the photos column?
 - More exact error handling - what in the filter criteria caused the API to not be able to retrieve any data?
 - Option to expand/reduce radius within City.

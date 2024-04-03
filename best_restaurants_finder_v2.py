@@ -23,6 +23,7 @@ gmaps = googlemaps.Client(gmaps_api_key)
 
 # Set Title tag of Streamlit link
 st.set_page_config(page_title="Kevin's Best Restaurants Finder")
+                   # Blocked: layout="wide")
 
 # import warnings
 # Set ignore_warnings to True
@@ -218,6 +219,12 @@ def app():
                                               format="%.1f",
                                               min_value=0,
                                               max_value=5*3.5,
+                                          )
+                                          ,"price_level": st.column_config.ProgressColumn(
+                                              "Price",
+                                              format="%.0f",
+                                              min_value=0,
+                                              max_value=4,
                                           )
                                           # ,"photos": st.column_config.ImageColumn(
                                           #       "Images",
