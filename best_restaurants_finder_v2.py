@@ -203,7 +203,7 @@ def app():
                         raise ValueError("No restaurants found that match the criteria.")
                   
                   # Reset index before returning results
-                  filtered_df = filtered_df.reset_index()
+                  filtered_df = filtered_df.reset_index(drop=True)
 
                   return st.dataframe(filtered_df,
                                       column_config={
