@@ -27,8 +27,9 @@
     - https://docs.streamlit.io/library/api-reference/data/st.column_config/st.column_config.linkcolumn
     - Blocked: https://github.com/streamlit/streamlit/issues/6787
 - Drop down autofiller multiselect for city
-- Add Is Open Now filter
-- Add Is Operational filter (not perma or temporarily closed)
+- Add "Is Open Now" filter
+- Add "Is Operational" filter (not perma or temporarily closed)
+- **Hard** Add "Is Chain" filter. Eg. Gyu-Kaku Japanese BBQ has 4.4 stars, 2k+ reviews in every major US metropolitan city. Not what you're trying to go for when you're finding good new spots.
 - **Plot the top 10 results on a Gmaps Embed**
 - Rearrange dataframe column order depending on if its a mobile device (bring Gmaps link to the 3rd col) or not
     - Blocked: https://github.com/streamlit/streamlit/issues/708
