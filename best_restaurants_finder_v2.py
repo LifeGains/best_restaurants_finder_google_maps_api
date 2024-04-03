@@ -147,7 +147,7 @@ def app():
             "$$$": 3,
             "$$$$": 4
         }
-        price_level_type = st.multiselect("[Optional] Price levels to include: ", 
+        price_level_type = st.multiselect("[Optional] Price levels to include: (Default is All)", 
                                           options=list(price_level_options.keys()),
                                           default=list(price_level_options.keys()))
 
@@ -187,7 +187,7 @@ def app():
             except ValueError as e:
                 # Catch the custom exception and inform the user
                 st.error(str(e))
-                st.info("There are no results given your input criteria. Please adjust it and try again.")
+                # st.info("There are no results given your input criteria. Please adjust it and try again.")
       
 
 # Only run this if its ran as a standalone program.

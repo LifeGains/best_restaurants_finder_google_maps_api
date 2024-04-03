@@ -1,4 +1,4 @@
-# Best Restaurants Finder (Google Maps API)
+# Best Restaurants Finder (with Google Maps API)
 
 ### The app is live here: https://best-restaurants-finder.streamlit.app/
 
@@ -13,6 +13,7 @@
 
 # Jira To Do Nexts / Blockers
 
+- Drop down autofiller multiselect for city
 - More exact error handling - what in the filter criteria caused the API to not be able to retrieve any data?
 - Option to expand/reduce radius within City.
 - Option to specify state so that the city is not confused with another state (eg. Paris, France vs. Paris, Texas) 
