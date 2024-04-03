@@ -29,6 +29,7 @@
 - Drop down autofiller multiselect for city
 - Add Is Open Now filter
 - Add Is Operational filter (not perma or temporarily closed)
+- **Plot the top 10 results on a Gmaps Embed**
 - Figure out how to extract/display the photos in the photos column?
 - More exact error handling - what in the filter criteria caused the API to not be able to retrieve any data?
 - Option to expand/reduce radius within City.

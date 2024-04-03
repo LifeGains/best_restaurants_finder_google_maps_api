@@ -25,6 +25,18 @@ gmaps = googlemaps.Client(gmaps_api_key)
 # Set ignore_warnings to True
 # warnings.simplefilter("ignore")
 
+# Assign points with exponential decay.
+def create_points_column(df, column_name):
+    # Define bins and labels
+    bins = [0, 100, 300, 800, 2000000]
+    labels = [1, 2, 3, 3.5]  # Points assigned for each bin
+    
+    # Check if the column exists and then generate the points series
+    if column_name in df.columns:
+        return pd.cut(df[column_name], bins=bins, labels=labels, right=False, include_lowest=True)
+    else:
+        return "Column name provided does not exist in DataFrame."
+
 def find_best_restaurants(city_name, place_type, min_rating=0, min_n_ratings=0, query='', n_meters=1000):
   lat = gmaps.places(query=city_name).get('results')[0].get('geometry').get('location').get('lat')
   lng = gmaps.places(query=city_name).get('results')[0].get('geometry').get('location').get('lng')
@@ -78,10 +90,17 @@ def find_best_restaurants(city_name, place_type, min_rating=0, min_n_ratings=0, 
 
       df['permalink'] = df.apply(lambda row: f"https://www.google.com/maps/search/?api=1&query={row['location.lng']}%2C{row['location.lat']}&query_place_id={row['place_id']}"
                                 , axis=1)
+      
+      # Add score column
+      df['user_ratings_adjusted'] = create_points_column(df, 'user_ratings_total')
+      df['user_ratings_adjusted'] = pd.to_numeric(df['user_ratings_adjusted'])
+      df['score'] = df['rating']*df['user_ratings_adjusted']
+
       # Sort by rating and user rating, reset index.
-      df = df.sort_values(by=['rating', 'user_ratings_total'], ascending=[False, False])
+      df = df.sort_values(by=['score', 'user_ratings_total'], ascending=[False, False])
+      # df = df.sort_values(by=['rating', 'user_ratings_total'], ascending=[False, False])
       # Set column order
-      col_order = ['name', 'rating', 'user_ratings_total', 'permalink', 'price_level']
+      col_order = ['name', 'score', 'rating', 'user_ratings_total', 'permalink', 'price_level']
       # Do not repeat the col names
       df = df[col_order + [col for col in df.columns if col not in col_order]]
       #   df = df[ ['name', 'rating', 'user_ratings_total'] + [ col for col in df.columns if col != ['name', 'rating', 'user_ratings_total'] ] ]
