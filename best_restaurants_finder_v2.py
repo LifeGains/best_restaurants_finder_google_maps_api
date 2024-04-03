@@ -21,6 +21,9 @@ load_dotenv(dotenv_path)
 gmaps_api_key = os.getenv("GOOGLE_MAPS_API_KEY")
 gmaps = googlemaps.Client(gmaps_api_key)
 
+# Set Title tag of Streamlit link
+st.set_page_config(page_title="Kevin's Best Restaurants Finder")
+
 # import warnings
 # Set ignore_warnings to True
 # warnings.simplefilter("ignore")
