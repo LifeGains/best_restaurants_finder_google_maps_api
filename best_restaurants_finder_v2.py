@@ -209,6 +209,16 @@ def app():
                                             help="Direct link to Google Maps",
                                             display_text="GMaps Link"
                                          )
+                                         ,"score": st.column_config.ProgressColumn(
+                                              "Adjusted Score",
+                                              help="Adjusted score",
+                                              format="%.1f",
+                                              min_value=0,
+                                              max_value=5*3.5,
+                                          )
+                                          # ,"photos": st.column_config.ImageColumn(
+                                          #       "Images",
+                                          #   )
                                         # "permalink": st.column_config.LinkColumn()
                   })
             except ValueError as e:
