@@ -10,9 +10,18 @@
     1. A minimum number of reviews (eg. 500+ reviews), and
     2. a minimum rating (eg. 4.3+ stars)
 
+# Stack
+
+- Python
+- Google Maps API
+- Streamlit
+- Gumroad/Stripe (TBD)
 
 # Jira To Do Nexts / Blockers
 
+- Make the name column be hyperlinked with the permalink.
+    - https://docs.streamlit.io/library/api-reference/data/st.column_config/st.column_config.linkcolumn
+    - https://github.com/streamlit/streamlit/issues/6787
 - Create master "score" that is some weighted combination of `n_rating` * `n_reviews`. Find some way to translate 4.1, 4.5, 4.7 into S, A, B, C, D, F tier.
 - Drop down autofiller multiselect for city
 - More exact error handling - what in the filter criteria caused the API to not be able to retrieve any data?
@@ -25,10 +34,3 @@
 - Column for current wait time at the restaurant.
 - Column for make a reservation now (eg. with Resy)
 - Non-urgent - current limitation is only 60 results from Google Maps API. Find a way to expand this past 60 results.
-
-# Stack
-
-- Python
-- Google Maps API
-- Streamlit
-- Gumroad/Stripe (TBD)
