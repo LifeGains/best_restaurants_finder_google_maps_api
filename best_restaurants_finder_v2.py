@@ -34,7 +34,7 @@ st.set_page_config(page_title="Kevin's Best Restaurants Finder")
 def create_points_column(df, column_name):
     # Define bins and labels
     bins = [0, 100, 500, 800, 2000000]
-    labels = [1, 2, 3, 3.5]  # Points assigned for each bin
+    labels = [1, 2, 2.25, 2.5]  # Points assigned for each bin
     
     # Check if the column exists and then generate the points series
     if column_name in df.columns:
