@@ -131,7 +131,7 @@ def app():
             ,type="default"
             ,placeholder="Enter a city"
         )
-        options = ["restaurant", "cafe", "bar", "bakery", "natural_feature"]
+        options = ["restaurant", "cafe", "bar", "bakery"]
                    # "night_club", "art_gallery", "museum", "beauty_salon"]
         place_type = st.selectbox("Place type: ", options)
         # min_rating = st.number_input('Insert desired minimum rating between 0 and 5 (eg. 4.3)'
