@@ -19,6 +19,8 @@
 
 # Jira To Do Nexts / Blockers
 
+- Add screen shots of competitors into github.
+
 - Change filter to apply before outputting results so you get 60 filtered results, as opposed to 60 total results and then filter it down to meet the criteria.
 - Redo Gmaps extract from places() function
 - Create master "score" that is some weighted combination of `n_rating` * `n_reviews`. Find some way to translate 4.1, 4.5, 4.7 into S, A, B, C, D, F tier.
