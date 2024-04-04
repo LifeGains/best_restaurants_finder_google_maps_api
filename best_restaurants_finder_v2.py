@@ -219,7 +219,7 @@ def app():
                                               help="Adjusted score",
                                               format="%.1f",
                                               min_value=0,
-                                              max_value=5*3.5,
+                                              max_value=5*2.5,
                                           )
                                           ,"price_level": st.column_config.ProgressColumn(
                                               "Price",
