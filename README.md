@@ -19,6 +19,8 @@
 
 # Jira To Do Nexts / Blockers
 
+- Change filter to apply before outputting results so you get 60 filtered results, as opposed to 60 total results and then filter it down to meet the criteria.
+- Redo Gmaps extract from places() function
 - Create master "score" that is some weighted combination of `n_rating` * `n_reviews`. Find some way to translate 4.1, 4.5, 4.7 into S, A, B, C, D, F tier.
     - Based on market research, seems like theres an exponential decay for n reviews.
     - For example, 1000 reviews = 3000 reviews. However, 500 reviews > 100 reviews.
@@ -35,7 +37,9 @@
     - Blocked: https://github.com/streamlit/streamlit/issues/708
 - Figure out how to extract/display the photos in the photos column?
 - More exact error handling - what in the filter criteria caused the API to not be able to retrieve any data?
-- Option to expand/reduce radius within City.
+- Fully understand what radius parameter does. 
+    - Option to expand/reduce radius within City. After you understand it, then add it in. 
+    - Eg. Pleasant Hill query returns Hayward results.
 - Option to specify state so that the city is not confused with another state (eg. Paris, France vs. Paris, Texas) 
 - Column for n miles away from current location.
 - Given current location, permalink that gets directions to that place.
