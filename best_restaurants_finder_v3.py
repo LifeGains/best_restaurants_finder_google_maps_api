@@ -11,6 +11,7 @@ import streamlit as st
 from datetime import datetime
 import numpy as np
 from pandas import json_normalize
+import geocoder
 
 # pd.set_option('display.float_format', lambda x: '%.2f' % x)
 # pd.set_option('display.max_columns', None)
@@ -49,9 +50,13 @@ token_list = []
 master_df = pd.DataFrame()
 
 def find_best_restaurants(city_name, place_type, prices_allowed=[None,1,2,3,4], query='', open_now_boolean=False, page_token="", master_df=master_df):
-  # Automatic Parameters
-  lat = gmaps.places(query=city_name).get('results')[0].get('geometry').get('location').get('lat')
-  lng = gmaps.places(query=city_name).get('results')[0].get('geometry').get('location').get('lng')
+  if city_name == "":
+    g = geocoder.ip('me')
+    lat, lng = g.latlng
+  else:
+    # Automatic Parameters
+    lat = gmaps.places(query=city_name).get('results')[0].get('geometry').get('location').get('lat')
+    lng = gmaps.places(query=city_name).get('results')[0].get('geometry').get('location').get('lng')
   
   # Filter out None values from prices_allowed and calculate the maximum of the remaining values
   filtered_prices = [price for price in prices_allowed if price is not None]
@@ -107,12 +112,12 @@ def find_best_restaurants(city_name, place_type, prices_allowed=[None,1,2,3,4], 
 
     # Append dataframe to master dataframe
     master_df = pd.concat([master_df, df4], axis=0).reset_index(drop=True)
-    print(len(master_df))
+    # print(len(master_df))
     
     # Checks
     # Check and remove any duplicates
     master_df = master_df.drop_duplicates(subset='place_id', keep='first')
-    print(len(master_df))
+    # print(len(master_df))
     
     master_df = do_stuff_to_alrd_outputted_gmaps_df(master_df)
 
@@ -153,7 +158,7 @@ def app():
                This app lets you filter for the highest rated restaurants only if they have a minimum number of reviews.")
     with st.form(key='my_form'):
         city_name = st.text_input(
-            "Which city are you looking for a restaurant in:"
+            "Enter desired city or Leave blank to use your Current Location: "
             ,max_chars=100
             ,type="default"
             ,placeholder="Enter a city"
@@ -223,7 +228,7 @@ def app():
                         open_now_boolean=open_now_boolean, 
                         )
 
-                    print(prices_allowed)
+                    # print(prices_allowed)
 
                     # Add user specified filters
                     df = df[df['rating'] >= min_rating]
