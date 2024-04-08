@@ -20,13 +20,16 @@
 # Competitors
 
 Gives you top rated restaurants with 1 review:
-<img src="https://github.com/LifeGains/best_restaurants_finder_google_maps_api/assets/68449363/a0584c26-8e29-4a4f-875d-8be500d21e0b" width="50%" height="50%">
+
+<img src="https://github.com/LifeGains/best_restaurants_finder_google_maps_api/assets/68449363/a0584c26-8e29-4a4f-875d-8be500d21e0b" width="25%" height="25%">
 
 Or gives you thousands of reviews but 3.9 stars:
-<img src="https://github.com/LifeGains/best_restaurants_finder_google_maps_api/assets/68449363/d5cd71ac-ab71-45ca-917e-65c7d19f30d9" width="50%" height="50%">
+
+<img src="https://github.com/LifeGains/best_restaurants_finder_google_maps_api/assets/68449363/d5cd71ac-ab71-45ca-917e-65c7d19f30d9" width="25%" height="25%">
 
 Google Maps gives you results in a random order:
-<img src="https://github.com/LifeGains/best_restaurants_finder_google_maps_api/assets/68449363/983976f7-8e9e-42da-a325-9c137e4e2ea1" width="50%" height="50%">
+
+<img src="https://github.com/LifeGains/best_restaurants_finder_google_maps_api/assets/68449363/983976f7-8e9e-42da-a325-9c137e4e2ea1" width="25%" height="25%">
 
 # Jira To Do Nexts / Blockers
 
