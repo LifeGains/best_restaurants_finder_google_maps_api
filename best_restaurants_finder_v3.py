@@ -272,9 +272,16 @@ def app():
                 "South African",
                 "Canadian",
                 "New Zealand",
-                "Fusion"
+                "Fusion",
+                "Sushi",
+                "Ramen",
+                "Boba",
+                "Noodles"
             ]
-            cuisine_type = st.selectbox("[Optional] Enter type of cuisine you're looking for: ", cuisine_list)
+            cuisine_type = st.selectbox("[Optional] Enter type of cuisine you're looking for: "
+                                        , cuisine_list
+                                        , index=None
+                                        , placeholder="Eg. asian, boba, italian, sushi")
             # cuisine_type = st.text_input(
             #     "[Optional] Enter type of cuisine you're looking for: "
             #     ,max_chars=100
