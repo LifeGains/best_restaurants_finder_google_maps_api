@@ -11,9 +11,11 @@ import streamlit as st
 from datetime import datetime
 import numpy as np
 from pandas import json_normalize
-import geocoder
+from geopy.geocoders import Nominatim
 import requests
 import json
+from streamlit_geolocation import streamlit_geolocation
+from streamlit_js_eval import streamlit_js_eval, copy_to_clipboard, create_share_link, get_geolocation
 
 
 # pd.set_option('display.float_format', lambda x: '%.2f' % x)
@@ -55,15 +57,26 @@ master_df = pd.DataFrame()
 
 def find_best_restaurants(city_name, place_type, prices_allowed=[None,1,2,3,4], query='', open_now_boolean=False, page_token="", master_df=master_df):
   if city_name == "":
-    response = requests.get(f"https://ipgeolocation.abstractapi.com/v1/?api_key={abstract_api_key}")
-    # Make sure status code is 200.
-    print(f"Status Code: {response.status_code}")
+    location = get_geolocation()
+    lat = location['latitude']
+    lng = location['longitude']
 
-    # Assuming response.content is a JSON string in bytes format
-    content_dict = json.loads(response.content.decode('utf-8'))
+    # Using Streamlit Geolocation Package
+    # st.write("Using your current location. Please click Allow:")
+    # location = streamlit_geolocation()
+    # lat = location['latitude']
+    # lng = location['longitude']
 
-    lat = float(content_dict.get('latitude'))
-    lng = float(content_dict.get('longitude'))
+    # # Using Abstract API
+    # response = requests.get(f"https://ipgeolocation.abstractapi.com/v1/?api_key={abstract_api_key}")
+    # # Make sure status code is 200.
+    # print(f"Status Code: {response.status_code}")
+    # # Assuming response.content is a JSON string in bytes format
+    # content_dict = json.loads(response.content.decode('utf-8'))
+    # lat = float(content_dict.get('latitude'))
+    # lng = float(content_dict.get('longitude'))
+
+    # Using Geocoder API
     # g = geocoder.ip('me')
     # lat, lng = g.latlng
   else:
