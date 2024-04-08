@@ -12,6 +12,9 @@ from datetime import datetime
 import numpy as np
 from pandas import json_normalize
 import geocoder
+import requests
+import json
+
 
 # pd.set_option('display.float_format', lambda x: '%.2f' % x)
 # pd.set_option('display.max_columns', None)
@@ -22,6 +25,7 @@ load_dotenv(dotenv_path)
 
 # Load api key
 gmaps_api_key = os.getenv("GOOGLE_MAPS_API_KEY")
+abstract_api_key = os.getenv("ABSTRACT_API")
 gmaps = googlemaps.Client(gmaps_api_key)
 
 # Set Title tag of Streamlit link
@@ -51,8 +55,14 @@ master_df = pd.DataFrame()
 
 def find_best_restaurants(city_name, place_type, prices_allowed=[None,1,2,3,4], query='', open_now_boolean=False, page_token="", master_df=master_df):
   if city_name == "":
-    g = geocoder.ip('me')
-    lat, lng = g.latlng
+    response = requests.get(f"https://ipgeolocation.abstractapi.com/v1/?api_key={abstract_api_key}")
+    # Assuming response.content is a JSON string in bytes format
+    content_dict = json.loads(response.content.decode('utf-8'))
+
+    lat = content_dict.get('latitude')
+    lng = content_dict.get('longitude')
+    # g = geocoder.ip('me')
+    # lat, lng = g.latlng
   else:
     # Automatic Parameters
     lat = gmaps.places(query=city_name).get('results')[0].get('geometry').get('location').get('lat')
@@ -158,10 +168,10 @@ def app():
                This app lets you filter for the highest rated restaurants only if they have a minimum number of reviews.")
     with st.form(key='my_form'):
         city_name = st.text_input(
-            "Enter desired city or Leave blank to use your Current Location: "
+            "Enter a city or Leave Blank for current location: "
             ,max_chars=100
             ,type="default"
-            ,placeholder="Enter a city"
+            ,placeholder="Enter a city or Leave Blank for current location"
         )
         options = ["restaurant", "cafe", "bar", "bakery"]
                    # "night_club", "art_gallery", "museum", "beauty_salon"]
