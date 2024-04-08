@@ -276,7 +276,8 @@ def app():
                 "Sushi",
                 "Ramen",
                 "Boba",
-                "Noodles"
+                "Noodles",
+                "Asian"
             ]
             cuisine_type = st.selectbox("[Optional] Enter type of cuisine you're looking for: "
                                         , cuisine_list
