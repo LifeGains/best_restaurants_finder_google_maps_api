@@ -53,32 +53,28 @@ token_list = []
 # Initialize master_Df
 master_df = pd.DataFrame()
 
-def find_best_restaurants(city_name, place_type, prices_allowed=[None,1,2,3,4], query='', open_now_boolean=False, page_token="", master_df=master_df):
-  if city_name == "":
-    location = get_geolocation()
-    time.sleep(2)
-    lat = location['coords']['latitude']
-    lng = location['coords']['longitude']
+def find_best_restaurants(city_name, place_type, prices_allowed=[None,1,2,3,4], query='', 
+                          open_now_boolean=False, page_token="", master_df=master_df,
+                          lat="", lng=""):
+# Using Streamlit Geolocation Package
+# st.write("Using your current location. Please click Allow:")
+# location = streamlit_geolocation()
+# lat = location['latitude']
+# lng = location['longitude']
 
-    # Using Streamlit Geolocation Package
-    # st.write("Using your current location. Please click Allow:")
-    # location = streamlit_geolocation()
-    # lat = location['latitude']
-    # lng = location['longitude']
+# # Using Abstract API
+# response = requests.get(f"https://ipgeolocation.abstractapi.com/v1/?api_key={abstract_api_key}")
+# # Make sure status code is 200.
+# print(f"Status Code: {response.status_code}")
+# # Assuming response.content is a JSON string in bytes format
+# content_dict = json.loads(response.content.decode('utf-8'))
+# lat = float(content_dict.get('latitude'))
+# lng = float(content_dict.get('longitude'))
 
-    # # Using Abstract API
-    # response = requests.get(f"https://ipgeolocation.abstractapi.com/v1/?api_key={abstract_api_key}")
-    # # Make sure status code is 200.
-    # print(f"Status Code: {response.status_code}")
-    # # Assuming response.content is a JSON string in bytes format
-    # content_dict = json.loads(response.content.decode('utf-8'))
-    # lat = float(content_dict.get('latitude'))
-    # lng = float(content_dict.get('longitude'))
-
-    # Using Geocoder API
-    # g = geocoder.ip('me')
-    # lat, lng = g.latlng
-  else:
+# Using Geocoder API
+# g = geocoder.ip('me')
+# lat, lng = g.latlng
+  if lat == "" or lng == "":
     # Automatic Parameters
     lat = gmaps.places(query=city_name).get('results')[0].get('geometry').get('location').get('lat')
     lng = gmaps.places(query=city_name).get('results')[0].get('geometry').get('location').get('lng')
@@ -124,7 +120,7 @@ def find_best_restaurants(city_name, place_type, prices_allowed=[None,1,2,3,4], 
     master_df = pd.concat([master_df, df4], axis=0).reset_index(drop=True)
     # Ensure a short delay before the next request to comply with API's "next_page_token" latency
     time.sleep(2)  # Google Maps API requires a short delay before using the next_page_token
-    return find_best_restaurants(city_name, place_type, prices_allowed, query, open_now_boolean, next_page_token, master_df=master_df)
+    return find_best_restaurants(city_name, place_type, prices_allowed, query, open_now_boolean, next_page_token, master_df=master_df, lat=lat, lng=lng)
 
   # No 'next_page_token' means its already the last page.
   else:
@@ -181,6 +177,9 @@ def app():
     st.title("Best Restaurants Finder")
     st.caption("Are you sick of finding 5 star restaurants with 1 review? \
                This app lets you filter for the highest rated restaurants only if they have a minimum number of reviews.")
+    if st.checkbox('Use current location?'):
+        location = get_geolocation()
+        location_boolean = True
     with st.form(key='my_form'):
         city_name = st.text_input(
             "Enter a city or Leave Blank for current location: "
@@ -190,6 +189,7 @@ def app():
         )
         options = ["restaurant", "cafe", "bar", "bakery"]
                    # "night_club", "art_gallery", "museum", "beauty_salon"]
+
         place_type = st.selectbox("Place type: ", options)
         # min_rating = st.number_input('Insert desired minimum rating between 0 and 5 (eg. 4.3)'
         #                              ,placeholder="4.3"
@@ -245,12 +245,22 @@ def app():
                 # if cuisine_type is not blank:
                 # with st.spinner(f'Generating top ' + next(iter({place_type})) + 's (with a ' + next(iter({cuisine_type})) + ' focus)...'):
                     # Put the sub-city into the city_name for it to work better. Eg. Lower East Side instead of Manhattan.
+                    if location_boolean:
+                        lat = location['coords']['latitude']
+                        lng = location['coords']['longitude']
+                    else:
+                        lat = ""
+                        lng = ""
+                    print(lat)
+                    print(lng)
                     df = find_best_restaurants(
                         city_name=city_name, 
                         place_type=place_type, 
                         prices_allowed=prices_allowed, 
                         query=cuisine_type, 
                         open_now_boolean=open_now_boolean, 
+                        lat=lat,
+                        lng=lng
                         )
 
                     # print(prices_allowed)
