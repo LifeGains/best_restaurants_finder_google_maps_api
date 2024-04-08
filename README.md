@@ -2,6 +2,8 @@
 
 ### The app is live here: https://best-restaurants-finder.streamlit.app/
 
+<img src="https://github.com/LifeGains/best_restaurants_finder_google_maps_api/assets/68449363/98c1f484-453b-40a2-afc0-25843ea3d91e" width="40%" height="40%">
+
 # Background
 - I had a personal problem and decided to solve it.
 - In Yelp, you can only search for Top Rated or Most Reviewed restaurants. The problem with this is that the Most Reviewed restaurant may only be a 3.3 star place, and the Top Reviewed restaurant is usually a new or obscure place with 1 review by the owner.
@@ -19,7 +21,7 @@
 
 # Competitors
 
-Gives you top rated restaurants with 1 review:
+Yelp gives you top rated restaurants with 1 review:
 
 <img src="https://github.com/LifeGains/best_restaurants_finder_google_maps_api/assets/68449363/a0584c26-8e29-4a4f-875d-8be500d21e0b" width="25%" height="25%">
 
