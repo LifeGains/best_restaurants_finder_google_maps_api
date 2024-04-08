@@ -57,8 +57,9 @@ master_df = pd.DataFrame()
 def find_best_restaurants(city_name, place_type, prices_allowed=[None,1,2,3,4], query='', open_now_boolean=False, page_token="", master_df=master_df):
   if city_name == "":
     location = get_geolocation()
-    lat = location['latitude']
-    lng = location['longitude']
+    time.sleep(2)
+    lat = location['coords']['latitude']
+    lng = location['coords']['longitude']
 
     # Using Streamlit Geolocation Package
     # st.write("Using your current location. Please click Allow:")
