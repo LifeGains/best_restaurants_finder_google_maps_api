@@ -220,12 +220,67 @@ def app():
                                     value=False)
         
         with st.expander("Additional Settings:"):
-            cuisine_type = st.text_input(
-                "[Optional] Enter type of cuisine you're looking for: "
-                ,max_chars=100
-                ,type="default"
-                ,placeholder="Eg. asian, boba, italian, sushi"
-            )
+            cuisine_list = [
+                "American",
+                "Italian",
+                "Mexican",
+                "Chinese",
+                "Japanese",
+                "Indian",
+                "Thai",
+                "French",
+                "Mediterranean",
+                "Greek",
+                "Spanish",
+                "Korean",
+                "Vietnamese",
+                "Middle Eastern",
+                "Caribbean",
+                "Brazilian",
+                "German",
+                "British",
+                "Cajun",
+                "Soul Food",
+                "Southern",
+                "Tex-Mex",
+                "Peruvian",
+                "Argentinian",
+                "Turkish",
+                "Russian",
+                "Filipino",
+                "African",
+                "Moroccan",
+                "Ethiopian",
+                "Australian",
+                "Hawaiian",
+                "Irish",
+                "Swedish",
+                "Belgian",
+                "Portuguese",
+                "Israeli",
+                "Lebanese",
+                "Indonesian",
+                "Malaysian",
+                "Singaporean",
+                "Scandinavian",
+                "Polish",
+                "Cuban",
+                "Jamaican",
+                "Nigerian",
+                "Kenyan",
+                "Tanzanian",
+                "South African",
+                "Canadian",
+                "New Zealand",
+                "Fusion"
+            ]
+            cuisine_type = st.selectbox("[Optional] Enter type of cuisine you're looking for: ", cuisine_list)
+            # cuisine_type = st.text_input(
+            #     "[Optional] Enter type of cuisine you're looking for: "
+            #     ,max_chars=100
+            #     ,type="default"
+            #     ,placeholder="Eg. asian, boba, italian, sushi"
+            # )
 
             price_level_options = {
                 "No label": None,
