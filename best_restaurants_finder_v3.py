@@ -53,9 +53,9 @@ token_list = []
 # Initialize master_Df
 master_df = pd.DataFrame()
 
-def find_best_restaurants(city_name, place_type, prices_allowed=[None,1,2,3,4], query='', 
+def find_best_restaurants(city_name, place_type, lat, lng, prices_allowed=[None,1,2,3,4], query='', 
                           open_now_boolean=False, page_token="", master_df=master_df,
-                          lat="", lng=""):
+                          ):
 # Using Streamlit Geolocation Package
 # st.write("Using your current location. Please click Allow:")
 # location = streamlit_geolocation()
@@ -120,7 +120,7 @@ def find_best_restaurants(city_name, place_type, prices_allowed=[None,1,2,3,4], 
     master_df = pd.concat([master_df, df4], axis=0).reset_index(drop=True)
     # Ensure a short delay before the next request to comply with API's "next_page_token" latency
     time.sleep(2)  # Google Maps API requires a short delay before using the next_page_token
-    return find_best_restaurants(city_name, place_type, prices_allowed, query, open_now_boolean, next_page_token, master_df=master_df, lat=lat, lng=lng)
+    return find_best_restaurants(city_name, place_type, lat, lng, prices_allowed, query, open_now_boolean, next_page_token, master_df=master_df)
 
   # No 'next_page_token' means its already the last page.
   else:
@@ -177,6 +177,7 @@ def app():
     st.title("Best Restaurants Finder")
     st.caption("Are you sick of finding 5 star restaurants with 1 review? \
                This app lets you filter for the highest rated restaurants only if they have a minimum number of reviews.")
+    location_boolean = False
     if st.checkbox('Use current location?'):
         location = get_geolocation()
         location_boolean = True
