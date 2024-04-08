@@ -178,7 +178,7 @@ def app():
     st.caption("Are you sick of finding 5 star restaurants with 1 review? \
                This app lets you filter for the highest rated restaurants only if they have a minimum number of reviews.")
     location_boolean = False
-    if st.checkbox('Use current location?'):
+    if st.toggle('Use current location?'):
         location = get_geolocation()
         location_boolean = True
     with st.form(key='my_form'):
@@ -215,30 +215,31 @@ def app():
         # min_num_reviews = st.number_input('Insert desired minimum number of reviews (eg. 100)'
         #                             ,placeholder="500")
 
-        cuisine_type = st.text_input(
-            "[Optional] Enter type of cuisine you're looking for: "
-            ,max_chars=100
-            ,type="default"
-            ,placeholder="Eg. asian, boba, italian, sushi"
-        )
-
-        price_level_options = {
-            "No label": None,
-            "$": 1,
-            "$$": 2,
-            "$$$": 3,
-            "$$$$": 4
-        }
-        price_level_type = st.multiselect("[Optional] Price levels to include: (Default is All)", 
-                                          options=list(price_level_options.keys()),
-                                          default=list(price_level_options.keys()))
-        
-        # Convert selected price level symbols to their corresponding numeric values
-        prices_allowed = [price_level_options[price] for price in price_level_type if price in price_level_options]
-
         # Create open now toggle
         open_now_boolean = st.toggle('Show Restaurants that are Open Now?',
                                     value=False)
+        
+        with st.expander("Additional Settings:"):
+            cuisine_type = st.text_input(
+                "[Optional] Enter type of cuisine you're looking for: "
+                ,max_chars=100
+                ,type="default"
+                ,placeholder="Eg. asian, boba, italian, sushi"
+            )
+
+            price_level_options = {
+                "No label": None,
+                "$": 1,
+                "$$": 2,
+                "$$$": 3,
+                "$$$$": 4
+            }
+            price_level_type = st.multiselect("[Optional] Price levels to include: (Default is All)", 
+                                            options=list(price_level_options.keys()),
+                                            default=list(price_level_options.keys()))
+            
+            # Convert selected price level symbols to their corresponding numeric values
+            prices_allowed = [price_level_options[price] for price in price_level_type if price in price_level_options]
 
         if st.form_submit_button("Submit"):
             try:
