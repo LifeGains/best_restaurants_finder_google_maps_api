@@ -407,6 +407,9 @@ def app():
                         # If the dataframe is empty, raise a custom exception
                         raise ValueError(f"You have high af standards for {city_name}. Unfortunately, there are no results matching the criteria. Is it because you have Open Now checked? Please lower minimum number of reviews or minimum rating.")
                     
+                    if location_boolean == False and city_name == "":
+                        raise ValueError(f"Please enter a city name or turn on current location toggle.")
+
                     # Reset index before returning results
                     df = df.reset_index(drop=True)
 
