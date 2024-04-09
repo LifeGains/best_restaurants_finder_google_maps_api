@@ -357,7 +357,22 @@ def app():
             # Convert selected price level symbols to their corresponding numeric values
             prices_allowed = [price_level_options[price] for price in price_level_type if price in price_level_options]
 
-        if st.form_submit_button("Submit"):
+        customized_button = st.markdown("""
+            <style>
+            div.stButton > button:first-child {
+                background-color: #578a00;
+                color:#ffffff;
+            }
+            div.stButton > button:hover {
+                background-color: #00128a;
+                color:#ffffff;
+                }
+            </style>""", unsafe_allow_html=True)
+        submit_btn = customized_button  # Modified
+        submit_btn = st.form_submit_button('Submit')
+        
+        # if st.form_submit_button("Submit"):
+        if submit_btn:
             try:
                 with st.spinner(f'Generating top ' + next(iter({place_type})) + 's...'):
                 # if cuisine_type is not blank:
