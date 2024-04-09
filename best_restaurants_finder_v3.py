@@ -74,10 +74,10 @@ def find_best_restaurants(city_name, place_type, lat, lng, prices_allowed=[None,
 # Using Geocoder API
 # g = geocoder.ip('me')
 # lat, lng = g.latlng
-  if lat == "" or lng == "":
+#   if lat == "" or lng == "":
     # Automatic Parameters
-    lat = gmaps.places(query=city_name).get('results')[0].get('geometry').get('location').get('lat')
-    lng = gmaps.places(query=city_name).get('results')[0].get('geometry').get('location').get('lng')
+    # lat = gmaps.places(query=city_name).get('results')[0].get('geometry').get('location').get('lat')
+    # lng = gmaps.places(query=city_name).get('results')[0].get('geometry').get('location').get('lng')
   
   # Filter out None values from prices_allowed and calculate the maximum of the remaining values
   filtered_prices = [price for price in prices_allowed if price is not None]
@@ -385,8 +385,8 @@ def app():
                         lat = location['coords']['latitude']
                         lng = location['coords']['longitude']
                     else:
-                        lat = ""
-                        lng = ""
+                        lat = gmaps.places(query=city_name).get('results')[0].get('geometry').get('location').get('lat')
+                        lng = gmaps.places(query=city_name).get('results')[0].get('geometry').get('location').get('lng')
                     print(lat)
                     print(lng)
                     df = find_best_restaurants(
