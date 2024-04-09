@@ -377,7 +377,10 @@ def app():
                 with st.spinner(f'Generating top ' + next(iter({place_type})) + 's...'):
                 # if cuisine_type is not blank:
                 # with st.spinner(f'Generating top ' + next(iter({place_type})) + 's (with a ' + next(iter({cuisine_type})) + ' focus)...'):
-                    # Put the sub-city into the city_name for it to work better. Eg. Lower East Side instead of Manhattan.
+                    if location_boolean == False and city_name == "":
+                        raise ValueError(f"Please enter a city name or turn on current location toggle.")
+
+                    # Put the sub-city into the city_name for it to work better. Eg. Lower East Side instead of Manhattan.                    
                     if location_boolean:
                         lat = location['coords']['latitude']
                         lng = location['coords']['longitude']
@@ -407,9 +410,6 @@ def app():
                         # If the dataframe is empty, raise a custom exception
                         raise ValueError(f"You have high af standards for {city_name}. Unfortunately, there are no results matching the criteria. Is it because you have Open Now checked? Please lower minimum number of reviews or minimum rating.")
                     
-                    if location_boolean == False and city_name == "":
-                        raise ValueError(f"Please enter a city name or turn on current location toggle.")
-
                     # Reset index before returning results
                     df = df.reset_index(drop=True)
 
