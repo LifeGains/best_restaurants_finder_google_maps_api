@@ -216,7 +216,7 @@ def app():
         #                             ,placeholder="500")
 
         # Create open now toggle
-        open_now_boolean = st.toggle('Show Restaurants that are Open Now?',
+        open_now_boolean = st.toggle('Must be Open Now?',
                                     value=False)
         
         with st.expander("Additional Options:"):
