@@ -14,7 +14,9 @@ from pandas import json_normalize
 import requests
 import json
 from streamlit_js_eval import get_geolocation
-
+from geopy.geocoders import Nominatim
+import inspect
+from geopy.distance import geodesic
 
 # pd.set_option('display.float_format', lambda x: '%.2f' % x)
 # pd.set_option('display.max_columns', None)
@@ -36,6 +38,31 @@ st.set_page_config(page_title="Kevin's Best Restaurants Finder")
 # Set ignore_warnings to True
 # warnings.simplefilter("ignore")
 
+def get_city_bounds(latitude, longitude):
+    # Initialize Nominatim API
+    geolocator = Nominatim(user_agent="best-restaurants-finder")
+
+    # Use reverse geocoding to get an address from latitude and longitude
+    location = geolocator.reverse((latitude, longitude), exactly_one=True)
+    print(location)
+    if location:
+        address = location.raw['address']
+        city = address.get('city', address.get('town', address.get('village')))
+        if city:
+            # Get the bounding box for the city
+            location = geolocator.geocode(city)
+            if location:
+                return {
+                    'city': city,
+                    'bounding_box': location.raw['boundingbox']
+                }
+            else:
+                return {'error': 'City bounds could not be determined.'}
+        else:
+            return {'error': 'City not found.'}
+    else:
+        return {'error': 'Location not found.'}
+    
 # Assign points with exponential decay.
 def create_points_column(df, column_name):
     # Define bins and labels
@@ -53,7 +80,7 @@ token_list = []
 # Initialize master_Df
 master_df = pd.DataFrame()
 
-def find_best_restaurants(city_name, place_type, lat, lng, prices_allowed=[None,1,2,3,4], query='', 
+def find_best_restaurants(city_name, place_type, lat, lng, west,east,south,north, prices_allowed=[None,1,2,3,4], query='', 
                           open_now_boolean=False, page_token="", master_df=master_df,
                           ):
 # Using Streamlit Geolocation Package
@@ -84,9 +111,32 @@ def find_best_restaurants(city_name, place_type, lat, lng, prices_allowed=[None,
   max_price = max(filtered_prices) if filtered_prices else None
   min_price = min(filtered_prices) if filtered_prices else None
 
+  # location_string = "rectangle:" + str(south) + "," + str(west) + "|" + str(north) + "," + str(east)
+  # Calculate ideal radius
+  # Calculate the midpoint of the bounding box to use as a circle center
+  midpoint = ((south + north) / 2, (west + east) / 2)
+
+  # Calculate distances for width (east to west) and height (north to south) of the bounding box
+  width = geodesic((midpoint[0], west), (midpoint[0], east)).meters
+  height = geodesic((south, midpoint[1]), (north, midpoint[1])).meters
+
+  # The diameter is the max of the width or height
+  diameter = max(width, height)
+
+  # The radius is half the diameter
+  # Im dividing it by 4 cuz its still too big.
+  ideal_radius = int(diameter / 6)
+  print("Ideal radius: " + str(ideal_radius))
+
+  # Rankby distance when query is not null
+  if query != "":
+      rank_by_variable = 'distance'
+  else:
+      rank_by_variable = ''
   gmaps_json = gmaps.places(location=(lat,lng),
+                            radius = ideal_radius,
+                            # rankby = rank_by_variable,
                             type = place_type,
-                            # query = str(query) + " in " + str(city_name),
                             query = query,
                             min_price = min_price,
                             max_price = max_price,
@@ -121,7 +171,7 @@ def find_best_restaurants(city_name, place_type, lat, lng, prices_allowed=[None,
     master_df = pd.concat([master_df, df4], axis=0).reset_index(drop=True)
     # Ensure a short delay before the next request to comply with API's "next_page_token" latency
     time.sleep(2)  # Google Maps API requires a short delay before using the next_page_token
-    return find_best_restaurants(city_name, place_type, lat, lng, prices_allowed, query, open_now_boolean, next_page_token, master_df=master_df)
+    return find_best_restaurants(city_name, place_type, lat, lng,  west,east,south,north, prices_allowed, query, open_now_boolean, next_page_token, master_df=master_df)
 
   # No 'next_page_token' means its already the last page.
   else:
@@ -234,7 +284,7 @@ def app():
                 "Mediterranean",
                 "Greek",
                 "Spanish",
-                "korean",
+                "Korean",
                 "Vietnamese",
                 "Middle Eastern",
                 "Caribbean",
@@ -391,6 +441,13 @@ def app():
                         lng_coord = gmaps.places(query=city_name).get('results')[0].get('geometry').get('location').get('lng')
                     print(lat_coord)
                     print(lng_coord)
+
+                    # Obtain the bounding box coordinates as strings
+                    city_bounding_box = get_city_bounds(lat_coord, lng_coord)['bounding_box']
+                    print(city_bounding_box)
+                    # Cast the bounding box coordinates to floats
+                    south_coord, north_coord, west_coord, east_coord = map(float, city_bounding_box)
+
                     df = find_best_restaurants(
                         city_name=city_name, 
                         place_type=place_type, 
@@ -398,7 +455,11 @@ def app():
                         query=cuisine_type, 
                         open_now_boolean=open_now_boolean, 
                         lat=lat_coord,
-                        lng=lng_coord
+                        lng=lng_coord,
+                        west=west_coord,
+                        east=east_coord,
+                        south=south_coord,
+                        north=north_coord,
                         )
 
                     # print(prices_allowed)
@@ -446,6 +507,13 @@ def app():
                 st.error(str(e))
                 # st.info("There are no results given your input criteria. Please adjust it and try again.")
       
+# Inspect parameters
+# Get the parameters of the function
+parameters = inspect.signature(gmaps.places).parameters
+# Extract parameter names
+parameter_names = list(parameters.keys())
+# Print the parameter names
+# print("Function parameters:", parameter_names)
 
 # Only run this if its ran as a standalone program.
 if __name__ == '__main__':
