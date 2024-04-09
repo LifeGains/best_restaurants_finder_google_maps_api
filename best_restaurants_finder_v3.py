@@ -86,7 +86,7 @@ def find_best_restaurants(city_name, place_type, lat, lng, prices_allowed=[None,
 
   gmaps_json = gmaps.places(location=(lat,lng),
                             type = place_type,
-                            query = str(city_name) + " " + str(query),
+                            query = str(query) + " in " + str(city_name),
                             # query = query,
                             min_price = min_price,
                             max_price = max_price,
