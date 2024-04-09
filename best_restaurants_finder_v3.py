@@ -298,6 +298,7 @@ def app():
                 "Fish",
                 "Salmon",
                 "Shrimp",
+                "Salad",
                 "Sashimi",
                 "Poke Bowl",
                 "Risotto",
@@ -327,7 +328,9 @@ def app():
                 "Moussaka",
                 "Pancakes",
                 "Waffles",
-                "Crepes"
+                "Crepes",
+                "Fries",
+                "Fast Food"
             ]
             cuisine_type = st.selectbox("Cuisine Type: "
                                         , cuisine_list
