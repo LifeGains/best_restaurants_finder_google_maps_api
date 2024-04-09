@@ -295,7 +295,7 @@ def app():
                 "Hamburger",
                 "Fried Chicken",
                 "Burrito",
-                "Taco",
+                "Fish",
                 "Salmon",
                 "Shrimp",
                 "Sashimi",
