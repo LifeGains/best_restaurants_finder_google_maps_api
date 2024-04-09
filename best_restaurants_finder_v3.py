@@ -86,7 +86,8 @@ def find_best_restaurants(city_name, place_type, lat, lng, prices_allowed=[None,
 
   gmaps_json = gmaps.places(location=(lat,lng),
                             type = place_type,
-                            query = query,
+                            query = str(city_name) + " " + str(query),
+                            # query = query,
                             min_price = min_price,
                             max_price = max_price,
                             open_now = open_now_boolean,
@@ -181,6 +182,7 @@ def app():
     if st.toggle('Use current location?'):
         location = get_geolocation()
         location_boolean = True
+
     with st.form(key='my_form'):
         city_name = st.text_input(
             "Enter a City or Leave Blank for current location: "
@@ -232,7 +234,7 @@ def app():
                 "Mediterranean",
                 "Greek",
                 "Spanish",
-                "Korean",
+                "korean",
                 "Vietnamese",
                 "Middle Eastern",
                 "Caribbean",
@@ -382,21 +384,21 @@ def app():
 
                     # Put the sub-city into the city_name for it to work better. Eg. Lower East Side instead of Manhattan.                    
                     if location_boolean:
-                        lat = location['coords']['latitude']
-                        lng = location['coords']['longitude']
+                        lat_coord = location['coords']['latitude']
+                        lng_coord = location['coords']['longitude']
                     else:
-                        lat = gmaps.places(query=city_name).get('results')[0].get('geometry').get('location').get('lat')
-                        lng = gmaps.places(query=city_name).get('results')[0].get('geometry').get('location').get('lng')
-                    print(lat)
-                    print(lng)
+                        lat_coord = gmaps.places(query=city_name).get('results')[0].get('geometry').get('location').get('lat')
+                        lng_coord = gmaps.places(query=city_name).get('results')[0].get('geometry').get('location').get('lng')
+                    print(lat_coord)
+                    print(lng_coord)
                     df = find_best_restaurants(
                         city_name=city_name, 
                         place_type=place_type, 
                         prices_allowed=prices_allowed, 
                         query=cuisine_type, 
                         open_now_boolean=open_now_boolean, 
-                        lat=lat,
-                        lng=lng
+                        lat=lat_coord,
+                        lng=lng_coord
                         )
 
                     # print(prices_allowed)
