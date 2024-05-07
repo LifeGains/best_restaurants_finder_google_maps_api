@@ -211,7 +211,7 @@ def do_stuff_to_alrd_outputted_gmaps_df(df):
     df = df.sort_values(by=['score', 'user_ratings_total'], ascending=[False, False])
     # df = df.sort_values(by=['rating', 'user_ratings_total'], ascending=[False, False])
     # Set column order
-    col_order = ['name', 'score', 'rating', 'user_ratings_total', 'permalink', 'price_level']
+    col_order = ['name', 'permalink', 'score', 'rating', 'user_ratings_total', 'price_level']
     # Put important columns in the front and do not repeat them in the back. 
     df = df[col_order + [col for col in df.columns if col not in col_order]]
 
@@ -230,8 +230,15 @@ def app():
                This app lets you filter for the highest rated restaurants only if they have a minimum number of reviews.")
     location_boolean = False
     if st.toggle('Use current location?'):
-        location = get_geolocation()
-        location_boolean = True
+        # location = get_geolocation()
+        # location_boolean = True
+        with st.spinner('Fetching your location...'):
+            try:
+                location = get_geolocation()
+                location_boolean = True
+                st.success('Location fetched successfully!')
+            except Exception as e:
+                st.error(f'Failed to fetch location: {e}')
 
     with st.form(key='my_form'):
         city_name = st.text_input(
