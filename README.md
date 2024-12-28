@@ -33,7 +33,13 @@ Google Maps gives you results in a random order:
 
 <img src="https://github.com/LifeGains/best_restaurants_finder_google_maps_api/assets/68449363/983976f7-8e9e-42da-a325-9c137e4e2ea1" width="25%" height="25%">
 
-# Jira To Do Nexts / Blockers
+# Major Blockers
+
+- Google Maps API can only return 60 results max. Eg. If I want to search Asian restaurants in San Jose, it will only return a max of 60 results. There is no way to return more unless you hypernarrow the constraints, but that is not what the user (me) ideally wants. No one by default when in a mood to try a new restaurant trying to search in a 2 mile radius.
+- Yelp API can only also return 50 results max. 
+- Until these can be resolved, maybe by scraping the internet, theres no way to accurately rank all restaurants by city.
+
+# To Do Next
 
 - Figure out how to limit results to only a certain city. Eg. Korean food in Milpitas only
 - Change filter to apply before outputting results so you get 60 filtered results, as opposed to 60 total results and then filter it down to meet the criteria.
