@@ -42,7 +42,7 @@ def create_points_column(df, column_name):
     else:
         return "Column name provided does not exist in DataFrame."
 
-def find_best_restaurants(city_name, place_type, min_rating=0, min_n_ratings=0, query='', n_meters=1000):
+def find_best_restaurants(city_name, place_type, min_rating=0, min_n_ratings=0, open_now_boolean=False, query='', n_meters=1000):
   lat = gmaps.places(query=city_name).get('results')[0].get('geometry').get('location').get('lat')
   lng = gmaps.places(query=city_name).get('results')[0].get('geometry').get('location').get('lng')
   df = pd.DataFrame()
@@ -57,6 +57,7 @@ def find_best_restaurants(city_name, place_type, min_rating=0, min_n_ratings=0, 
                                   type = place_type,
                                   query = query,
                                   radius = n_meters,
+                                  open_now = open_now_boolean,
                                   page_token = next_page_token_list[i],
                                   # minprice = minprice,
                                   # maxprice = maxprice
@@ -157,6 +158,10 @@ def app():
         # min_num_reviews = st.number_input('Insert desired minimum number of reviews (eg. 100)'
         #                             ,placeholder="500")
 
+        # Create open now toggle
+        open_now_boolean = st.toggle('Must be Open Now?',
+                                    value=False)
+        
         cuisine_type = st.text_input(
             "[Optional] Enter type of cuisine you're looking for: "
             ,max_chars=100
@@ -181,11 +186,13 @@ def app():
               # if cuisine_type is not blank:
               # with st.spinner(f'Generating top ' + next(iter({place_type})) + 's (with a ' + next(iter({cuisine_type})) + ' focus)...'):
                   # Put the sub-city into the city_name for it to work better. Eg. Lower East Side instead of Manhattan.
-                  df = find_best_restaurants(city_name=city_name,
+                  df = find_best_restaurants(
+                        city_name=city_name,
                         # place_type is more set in stone, has to be allowed param in google
                         place_type=place_type,
                         min_rating=min_rating,
                         min_n_ratings=min_num_reviews,
+                        open_now_boolean=open_now_boolean, 
                         # can be park, asian, bar, etc.
                         query=cuisine_type,
                         # radius is in meters, so 4828.02 = 3 miles.
