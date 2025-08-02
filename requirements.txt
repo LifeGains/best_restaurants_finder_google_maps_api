@@ -6,3 +6,4 @@ requests
 pandas
 numpy
 streamlit-js-eval
+pprint
