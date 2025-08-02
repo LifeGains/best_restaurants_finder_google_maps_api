@@ -14,9 +14,9 @@ import numpy as np
 # pd.set_option('display.float_format', lambda x: '%.2f' % x)
 # pd.set_option('display.max_columns', None)
 
-# Path
-dotenv_path = 'C:\\Users\\kevin\\Google Drive\\My Drive\\Github\\all-api-keys\\.env'
-load_dotenv(dotenv_path)
+# Automatically load .env from the same directory
+from dotenv import load_dotenv, find_dotenv
+load_dotenv(find_dotenv())
 
 # Load api key
 gmaps_api_key = os.getenv("GOOGLE_MAPS_API_KEY")

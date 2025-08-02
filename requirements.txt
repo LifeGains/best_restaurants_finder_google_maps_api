@@ -1,9 +1,8 @@
-googlemaps==4.10.0
-numpy==1.26.4
-pandas==2.2.1
-ppprint==0.1.0
-python-dotenv==1.0.1
-streamlit==1.32.1
-streamlit-js-eval==0.1.7
-geopy==2.4.1
-beautifulsoup4==4.12.3
+streamlit
+googlemaps
+python-dotenv
+geopy
+requests
+pandas
+numpy
+streamlit-js-eval
